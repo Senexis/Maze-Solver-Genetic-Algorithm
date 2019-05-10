@@ -138,7 +138,6 @@ namespace MazeSolverGeneticAlgorithm
                     traveled += 1;
                 }
 
-                var x = _maze.GetTiles()[0].Length - 1;
                 if (move == Maze.RightMove && _colPos != (_maze.GetTiles()[0].Length - 1))
                 {
                     _colPos += 1;
@@ -152,7 +151,9 @@ namespace MazeSolverGeneticAlgorithm
                 }
             }
 
+            // TODO: Implement efficiency by making path length dynamic to encourage shortest paths.
             efficiency = _maze.GetTilesCount() - _path.Length;
+
             _fitness = (traveled * 0.01) + (efficiency * 2) + noLoop - blockedCount;
 
             _endDistance = Math.Sqrt(Math.Pow(colPosEnd - _colPos, 2) + Math.Pow(rowPosEnd - _rowPos, 2));
