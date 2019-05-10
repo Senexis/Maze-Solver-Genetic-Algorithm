@@ -169,6 +169,7 @@ namespace MazeSolverGeneticAlgorithm
 
         /// <summary>
         /// Checks whether the move would move the individual outside of the boundaries of the maze.
+        /// This prevents "incomplete" mazes without walls all around the individual from crashing by way of index out of range errors.
         /// </summary>
         public bool MoveIsWithinBounds(int col, int row, char move)
         {
