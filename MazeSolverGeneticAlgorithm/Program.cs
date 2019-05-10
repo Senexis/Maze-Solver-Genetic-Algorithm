@@ -74,7 +74,7 @@ namespace MazeSolverGeneticAlgorithm
             });
 
             var winners = new Dictionary<Individual, int>();
-            var generation = new Generation(maze, new Random(), 100, 1000);
+            var generation = new Generation(maze, new Random(), 1000, 2500);
 
             while (generation.IsBreedable())
             {
@@ -114,7 +114,7 @@ namespace MazeSolverGeneticAlgorithm
                 var max = generation.GetPopulation().Max(individual => individual.GetFitness());
                 var best = generation.GetPopulation().Find(individual => individual.GetFitness() == max);
 
-                Console.WriteLine($"Best individual: {best.GetFitness()}, path: {best.GetPath()}, X: {best.GetRowPostion()}, Y: {best.GetColPosition()}");
+                Console.WriteLine($"Best individual: {best.GetFitness()}, length: {best.GetPath().Length}, path: {best.GetPath()}, X: {best.GetRowPostion()}, Y: {best.GetColPosition()}");
             }
 
             var winnerString = "";
