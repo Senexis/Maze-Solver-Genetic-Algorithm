@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeSolverGeneticAlgorithm", "MazeSolverGeneticAlgorithm\MazeSolverGeneticAlgorithm.csproj", "{DE54DEAD-C625-4455-B681-2B1D3456CE9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE54DEAD-C625-4455-B681-2B1D3456CE9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE54DEAD-C625-4455-B681-2B1D3456CE9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE54DEAD-C625-4455-B681-2B1D3456CE9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE54DEAD-C625-4455-B681-2B1D3456CE9D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F2B8972D-EB86-4342-926C-742969814456}
+	EndGlobalSection
+EndGlobal
