@@ -117,14 +117,14 @@ namespace MazeSolverGeneticAlgorithm
                 Console.WriteLine($"Best individual: {best.GetFitness()}, length: {best.GetPath().Length}, path: {best.GetPath()}, X: {best.GetRowPostion()}, Y: {best.GetColPosition()}");
             }
 
-            var winnerString = "";
-            foreach (var winner in winners)
-            {
-                winnerString += $"- Gen {winner.Value}, fitness {winner.Key.GetFitness()}, length {winner.Key.GetPath().Length}, path {winner.Key.GetPath()}\n";
-            }
-
             if (winners.Count > 0)
             {
+                var winnerString = "";
+                foreach (var winner in winners)
+                {
+                    winnerString += $"- Gen {winner.Value}, fitness {winner.Key.GetFitness()}, length {winner.Key.GetPath().Length}, path {winner.Key.GetPath()}\n";
+                }
+
                 var bestWinner = winners.Reverse().First();
                 var bestString = $"Best run:\nGen {bestWinner.Value}, fitness {bestWinner.Key.GetFitness()}, length {bestWinner.Key.GetPath().Length}, path {bestWinner.Key.GetPath()}\n";
 
