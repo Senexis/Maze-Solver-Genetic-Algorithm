@@ -123,11 +123,18 @@ namespace MazeSolverGeneticAlgorithm
                 winnerString += $"- Gen {winner.Value}, fitness {winner.Key.GetFitness()}, length {winner.Key.GetPath().Length}, path {winner.Key.GetPath()}\n";
             }
 
-            var bestWinner = winners.Reverse().First();
-            var bestString = $"Best run:\nGen {bestWinner.Value}, fitness {bestWinner.Key.GetFitness()}, length {bestWinner.Key.GetPath().Length}, path {bestWinner.Key.GetPath()}\n";
+            if (winners.Count > 0)
+            {
+                var bestWinner = winners.Reverse().First();
+                var bestString = $"Best run:\nGen {bestWinner.Value}, fitness {bestWinner.Key.GetFitness()}, length {bestWinner.Key.GetPath().Length}, path {bestWinner.Key.GetPath()}\n";
 
-            Console.WriteLine($"{bestString}\n{winners.Count} total winner(s):\n{winnerString}");
-            MessageBox.Show($"{bestString}\n{winners.Count} total winner(s):\n{winnerString}");
+                Console.WriteLine($"{bestString}\n{winners.Count} total winner(s):\n{winnerString}");
+                MessageBox.Show($"{bestString}\n{winners.Count} total winner(s):\n{winnerString}");
+            }
+            else
+            {
+                MessageBox.Show("There were no winners today. :-(");
+            }
 
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
