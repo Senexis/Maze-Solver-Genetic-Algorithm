@@ -47,12 +47,12 @@ namespace MazeSolverGeneticAlgorithm
         /// <summary>
         /// Create a new instance of an individual which will generate its own path randomly from a list of valid maze moves.
         /// </summary>
-        public Individual(Maze maze, Random random)
+        public Individual(Maze maze, Random random, int? pathLength = null)
         {
             _maze = maze;
             _random = random;
 
-            while (_path.Length < maze.GetTilesCount())
+            while (_path.Length < (pathLength ?? maze.GetTilesCount()))
             {
                 var index = random.Next(0, 4);
                 _path += Maze.ValidMoves[index];
@@ -86,12 +86,9 @@ namespace MazeSolverGeneticAlgorithm
             var rowPosEnd = _maze.GetEndPositionRow();
             var colPosEnd = _maze.GetEndPositionColumn();
 
-            var efficiency = 0;
             var blockedCount = 0;
             var traveled = 0;
             var noLoop = 0;
-
-            var moves = Maze.ValidMoves;
 
             for (var index = 0; index < _path.Length; index++)
             {
@@ -149,10 +146,16 @@ namespace MazeSolverGeneticAlgorithm
                     _colPos -= 1;
                     traveled += 1;
                 }
+
+                //if (_maze.GetTileAtPosition(_colPos, _rowPos) == Maze.EndTile)
+                //{
+                //    // This is where I would cut the path short and re-encourage breeding.
+                //    // However, due to time limitations I have opted not to.
+                //    // Instead, I'm using a static length decrease every successful generation.
+                //}
             }
 
-            // TODO: Implement efficiency by making path length dynamic to encourage shortest paths.
-            efficiency = _maze.GetTilesCount() - _path.Length;
+            var efficiency = _maze.GetTilesCount() - _path.Length;
 
             _fitness = (traveled * 0.01) + (efficiency * 2) + noLoop - blockedCount;
 

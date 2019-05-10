@@ -73,12 +73,65 @@ namespace MazeSolverGeneticAlgorithm
                 "xxxxxxxxxxx"
             });
 
-            var generation = new Generation(maze, new Random());
-            generation.Run();
+            var winners = new Dictionary<Individual, int>();
+            var generation = new Generation(maze, new Random(), 100, 1000);
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            while (generation.IsBreedable())
+            {
+                foreach (var individual in generation.GetPopulation())
+                {
+                    individual.CalculateFitness();
+
+                    if (maze.GetTileAtPosition(individual.GetColPosition(), individual.GetRowPostion()) == Maze.EndTile)
+                    {
+                        winners.Add(individual, generation.GetEvolutionCount() + 1);
+                        Console.WriteLine($"Winner found in generation {generation.GetEvolutionCount() + 1}!");
+
+                        // TODO: Instead of setting this to decrease by 1 every winner, use the shortest path somehow in dynamic learning.
+                        // This will take me a bunch of research and will likely not be doable in the amount of time I have.
+                        generation.SetPathLength(generation.GetPathLength() - 1);
+
+                        // Only return the first winner, fixes the issue with the length decreasing more than once with more than one winner.
+                        break;
+                    }
+                }
+
+                var fitness = generation.GetFitnessScores();
+                var weights = generation.NormalizeWeights(fitness);
+
+                generation.Breed(weights);
+
+                Console.WriteLine($"=== GENERATION {generation.GetEvolutionCount() + 1} ===");
+
+                foreach (var individual in generation.GetOffspring())
+                {
+                    individual.MutatePath();
+                    individual.CalculateFitness();
+                }
+
+                generation.Evolve();
+
+                var max = generation.GetPopulation().Max(individual => individual.GetFitness());
+                var best = generation.GetPopulation().Find(individual => individual.GetFitness() == max);
+
+                Console.WriteLine($"Best individual: {best.GetFitness()}, path: {best.GetPath()}, X: {best.GetRowPostion()}, Y: {best.GetColPosition()}");
+            }
+
+            var winnerString = "";
+            foreach (var winner in winners)
+            {
+                winnerString += $"- Gen {winner.Value}, fitness {winner.Key.GetFitness()}, length {winner.Key.GetPath().Length}, path {winner.Key.GetPath()}\n";
+            }
+
+            var bestWinner = winners.Reverse().First();
+            var bestString = $"Best run:\nGen {bestWinner.Value}, fitness {bestWinner.Key.GetFitness()}, length {bestWinner.Key.GetPath().Length}, path {bestWinner.Key.GetPath()}\n";
+
+            Console.WriteLine($"{bestString}\n{winners.Count} total winner(s):\n{winnerString}");
+            MessageBox.Show($"{bestString}\n{winners.Count} total winner(s):\n{winnerString}");
+
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new Form1());
         }
     }
 }

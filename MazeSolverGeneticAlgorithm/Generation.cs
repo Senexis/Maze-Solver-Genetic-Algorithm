@@ -30,6 +30,11 @@ namespace MazeSolverGeneticAlgorithm
         private int _currentEvolutionCount;
 
         /// <summary>
+        /// The internal instance of the current path length.
+        /// </summary>
+        private int _currentPathLength;
+
+        /// <summary>
         /// The internal instance of a list of individuals considered the current population.
         /// </summary>
         private List<Individual> _population = new List<Individual>();
@@ -42,11 +47,12 @@ namespace MazeSolverGeneticAlgorithm
         /// <summary>
         /// Create a new instance of a generation which will fill its population based off the provided population count.
         /// </summary>
-        public Generation(Maze maze, Random random, int population = 100, int generations = 5000)
+        public Generation(Maze maze, Random random, int population = 100, int generations = 5000, int? pathLength = null)
         {
             _maze = maze;
-            _maxEvolutionCount = generations;
             _random = random;
+            _maxEvolutionCount = generations;
+            _currentPathLength = pathLength ?? maze.GetTilesCount();
 
             for (var i = 0; i < population; i++)
             {
@@ -71,12 +77,12 @@ namespace MazeSolverGeneticAlgorithm
                 var indexParentOne = Selection(weights);
                 var indexParentTwo = Selection(weights);
 
-                var splitPoint = _random.Next(1, _maze.GetTilesCount() - 1);
+                var splitPoint = _random.Next(1, _currentPathLength - 1);
 
                 var pathOne = _population[indexParentOne].GetPath().Substring(0, splitPoint) +
-                              _population[indexParentTwo].GetPath().Substring(splitPoint, _maze.GetTilesCount() - splitPoint);
+                              _population[indexParentTwo].GetPath().Substring(splitPoint, _currentPathLength - splitPoint);
                 var pathTwo = _population[indexParentTwo].GetPath().Substring(0, splitPoint) +
-                              _population[indexParentOne].GetPath().Substring(splitPoint, _maze.GetTilesCount() - splitPoint);
+                              _population[indexParentOne].GetPath().Substring(splitPoint, _currentPathLength - splitPoint);
 
                 var childOne = new Individual(_maze, _random, pathOne);
                 var childTwo = new Individual(_maze, _random, pathTwo);
@@ -97,46 +103,6 @@ namespace MazeSolverGeneticAlgorithm
             _population = _offspring;
             _offspring = new List<Individual>();
             return _population;
-        }
-
-        /// <summary>
-        /// Runs the entire generation using all of the methods and logic found elsewhere.
-        /// </summary>
-        public void Run()
-        {
-            while (IsBreedable())
-            {
-                foreach (var individual in GetPopulation())
-                {
-                    individual.CalculateFitness();
-
-                    if (_maze.GetTileAtPosition(individual.GetColPosition(), individual.GetRowPostion()) == Maze.EndTile)
-                    {
-                        Console.WriteLine($"Winner found at generation {GetEvolutionCount() + 1}!");
-                        return;
-                    }
-                }
-
-                var fitness = GetFitnessScores();
-                var weights = NormalizeWeights(fitness);
-
-                Breed(weights);
-
-                Console.WriteLine($"=== GENERATION {GetEvolutionCount() + 1} ===");
-
-                foreach (var individual in GetOffspring())
-                {
-                    individual.MutatePath();
-                    individual.CalculateFitness();
-                }
-
-                Evolve();
-
-                var max = GetPopulation().Max(individual => individual.GetFitness());
-                var best = GetPopulation().Find(individual => individual.GetFitness() == max);
-
-                Console.WriteLine($"Best individual: {best.GetFitness()}, path: {best.GetPath()}, X: {best.GetRowPostion()}, Y: {best.GetColPosition()}");
-            }
         }
 
         /// <summary>
@@ -179,6 +145,16 @@ namespace MazeSolverGeneticAlgorithm
         public List<double> GetFitnessScores()
         {
             return _population.Select(individual => individual.GetFitness()).ToList();
+        }
+
+        public int GetPathLength()
+        {
+            return _currentPathLength;
+        }
+
+        public void SetPathLength(int length)
+        {
+            _currentPathLength = length;
         }
 
         /// <summary>
